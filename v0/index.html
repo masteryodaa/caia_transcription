@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor-Patient Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        .chat-header {
+            background-color: #0084ff;
+            color: #ffffff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f0f2f5;
+        }
+
+        .message {
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.patient {
+            justify-content: flex-end;
+        }
+
+        .message .text {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .message.doctor .text {
+            background-color: #e4e6eb;
+            color: #000000;
+            border-bottom-left-radius: 0;
+        }
+
+        .message.patient .text {
+            background-color: #0084ff;
+            color: #ffffff;
+            border-bottom-right-radius: 0;
+        }
+
+        .chat-footer {
+            padding: 10px;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-footer button {
+            padding: 10px 15px;
+            background-color: #0084ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-footer button:hover {
+            background-color: #006bbd;
+        }
+
+        .loading-text {
+            display: none;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #0084ff;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Doctor-Patient Chat</div>
+
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+
+        <div class="loading-text" id="loading-text">Transcribing...</div>
+
+        <div class="chat-footer">
+            <button onclick="startRecording()">🎤 Start</button>
+            <button onclick="stopRecording()">🛑 Stop</button>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        audioChunks = [];
+                        transcribeAudio(audioBlob);
+                    };
+
+                    mediaRecorder.start();
+                })
+                .catch(error => {
+                    console.error('Error accessing microphone:', error);
+                });
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+        }
+
+        function transcribeAudio(audioBlob) {
+            const formData = new FormData();
+            formData.append('file', audioBlob, 'audio.wav');
+
+            const loadingText = document.getElementById('loading-text');
+            loadingText.style.display = 'block';
+
+            fetch('http://127.0.0.1:8000/transcribe', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loadingText.style.display = 'none';
+
+                    const transcript = data.text || 'Could not transcribe audio.';
+                    addMessage('patient', transcript);
+
+                    // Simulate doctor's response
+                    const doctorResponse = `Let me assist you with that.`;
+                    setTimeout(() => addMessage('doctor', doctorResponse), 1000);
+                })
+                .catch(error => {
+                    loadingText.style.display = 'none';
+                    console.error('Error during transcription:', error);
+                });
+        }
+
+        function addMessage(sender, text) {
+            const chatMessages = document.getElementById('chat-messages');
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'text';
+            textDiv.textContent = `${sender === 'doctor' ? 'Doctor: ' : 'Patient: '} ${text}`;
+
+            messageDiv.appendChild(textDiv);
+            chatMessages.appendChild(messageDiv);
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
