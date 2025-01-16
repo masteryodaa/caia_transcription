@@ -5,17 +5,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor-Patient Chat</title>
+
+    <!-- Google Fonts link -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
     <style>
+        /* General styling */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+            /* font-family: 'Arial', sans-serif; */
+            font-family: 'Outfit', sans-serif;
+
+            background: linear-gradient(to right, #c6d7f7, #b0c6e1, #a9bce4);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
             margin: 0;
             padding: 0;
+            color: #333;
+            overflow-y: scroll;
+            /* Ensure the scrollbar is always visible */
+        }
+
+        /* Specific class with unique font weight */
+        .outfit-header {
+            font-family: 'Outfit', serif;
+            font-weight: 700; /* Example weight */
+        }
+
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f0f2f5;
+            /* Set the scrollbar thumb color to grey and track to light grey */
+        }
+
+        /* For WebKit-based browsers (Chrome, Safari) */
+        body::-webkit-scrollbar {
+            width: 6px;
+            /* Thin scrollbar */
+        }
+
+        body::-webkit-scrollbar-track {
+            background: #f0f2f5;
+            /* Light grey track */
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: #888;
+            /* Grey color */
+            border-radius: 10px;
+            /* Rounded thumb */
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background: #555;
+            /* Darker grey on hover */
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #004d7a;
+            margin: 20px 0;
+        }
+
+        .sub-header {
+            text-align: center;
+            font-size: 1rem;
+            color: #004d7a;
+            margin: 10px 0;
+            font-style: italic;
         }
 
         .chat-container {
-            max-width: 600px;
-            margin: 50px auto;
+            max-width: 650px;
+            margin: 0 auto;
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -23,6 +108,12 @@
             display: flex;
             flex-direction: column;
             height: 80vh;
+            /* Adjusted for screen fit */
+            max-height: 80vh;
+            padding: 15px;
+
+            font-family: 'Outfit', serif;
+            font-weight: 400;
         }
 
         .chat-header {
@@ -32,6 +123,10 @@
             text-align: center;
             font-size: 1.5rem;
             font-weight: bold;
+            border-radius: 10px 10px 0 0;
+
+            font-family: 'Outfit', serif;
+            font-weight: 600; /* Example weight */
         }
 
         .chat-messages {
@@ -39,6 +134,7 @@
             padding: 15px;
             overflow-y: auto;
             background-color: #f0f2f5;
+            border-radius: 0 0 10px 10px;
         }
 
         .message {
@@ -48,36 +144,64 @@
         }
 
         .message.patient {
+            justify-content: flex-start;
+        }
+
+        .message.doctor {
             justify-content: flex-end;
+        }
+
+        .message .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .message.doctor .logo {
+            margin-left: 10px;
+        }
+
+        .message.patient .logo {
+            margin-right: 10px;
         }
 
         .message .text {
             max-width: 70%;
             padding: 10px 15px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             line-height: 1.4;
+            font-family: 'Arial', sans-serif;
+
+            font-family: 'Outfit', serif;
+            font-weight: 500; /* Example weight */
         }
 
         .message.doctor .text {
-            background-color: #e4e6eb;
-            color: #000000;
-            border-bottom-left-radius: 0;
-        }
-
-        .message.patient .text {
             background-color: #0084ff;
             color: #ffffff;
             border-bottom-right-radius: 0;
         }
 
+        .message.patient .text {
+            background-color: #e4e6eb;
+            color: #000000;
+            border-bottom-left-radius: 0;
+        }
+
         .chat-footer {
-            padding: 10px;
+            padding: 15px;
             background-color: #ffffff;
             display: flex;
+            justify-content: space-between;
             align-items: center;
             gap: 10px;
             border-top: 1px solid #ddd;
+            border-radius: 0 0 10px 10px;
+
+            font-family: 'Outfit', serif;
+            font-weight: 500; /* Example weight */
         }
 
         .chat-footer button {
@@ -87,36 +211,109 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
         }
 
         .chat-footer button:hover {
             background-color: #006bbd;
         }
 
-        .loading-text {
+        .chat-footer input[type="file"] {
+            display: none;
+        }
+
+        .chat-footer label {
+            padding: 10px 15px;
+            background-color: #0084ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .chat-footer label:hover {
+            background-color: #006bbd;
+        }
+
+        .loading-text,
+        .summarizing-text {
             display: none;
             text-align: center;
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #0084ff;
             margin: 10px 0;
         }
+
+        .summary-text {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .instructions {
+            font-size: 1rem;
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .instructions p {
+            margin: 10px 0;
+        }
+
+        .instructions .highlight {
+            color: #0084ff;
+            font-weight: bold;
+        }
     </style>
+
 </head>
 
 <body>
-    <div class="chat-container">
-        <div class="chat-header">Doctor-Patient Chat</div>
-
-        <div class="chat-messages" id="chat-messages">
-            <!-- Messages will be dynamically added here -->
+    <div class="container">
+        <div class="header">
+            Doctor-Patient Chat
         </div>
 
-        <div class="loading-text" id="loading-text">Transcribing...</div>
+        <div class="sub-header">
+            A simple way to transcribe and summarize conversations for better communication.
+        </div>
 
-        <div class="chat-footer">
-            <button onclick="startRecording()">🎤 Start</button>
-            <button onclick="stopRecording()">🛑 Stop</button>
+        <div class="chat-container">
+            <div class="chat-header">Doctor-Patient Chat</div>
+
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages will be dynamically added here -->
+            </div>
+
+            <!-- Loading message for transcription -->
+            <div class="loading-text" id="loading-text">Transcribing...</div>
+
+            <div class="chat-footer">
+                <button onclick="startRecording()">🎤 Start</button>
+                <button onclick="stopRecording()">🛑 Stop</button>
+                <label for="audio-upload">📂 Upload</label>
+                <input type="file" id="audio-upload" accept="audio/*" onchange="handleFileUpload(event)">
+                <!-- Summarize Button -->
+                <button id="summarize-button" onclick="summarizeConversation()" disabled>📝 Summarize</button>
+            </div>
+
+            <!-- Summarizing progress and output text -->
+            <div id="summarizing-text" class="summarizing-text">Summarizing...</div>
+            <div id="summary-output" class="summary-text"></div>
+        </div>
+
+        <div class="instructions">
+            <p>To start a conversation, click on <span class="highlight">🎤 Start</span> and speak into your microphone.
+            </p>
+            <p>You can also upload an audio file by clicking on <span class="highlight">📂 Upload</span>.</p>
+            <p>Once the conversation is complete, click on <span class="highlight">📝 Summarize</span> to get a summary.
+            </p>
         </div>
     </div>
 
@@ -152,9 +349,16 @@
             }
         }
 
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                transcribeAudio(file);
+            }
+        }
+
         function transcribeAudio(audioBlob) {
             const formData = new FormData();
-            formData.append('file', audioBlob, 'audio.wav');
+            formData.append('file', audioBlob, audioBlob.name || 'audio.wav');
 
             const loadingText = document.getElementById('loading-text');
             loadingText.style.display = 'block';
@@ -167,33 +371,107 @@
                 .then(data => {
                     loadingText.style.display = 'none';
 
-                    const transcript = data.text || 'Could not transcribe audio.';
-                    addMessage('patient', transcript);
-
-                    // Simulate doctor's response
-                    const doctorResponse = `Let me assist you with that.`;
-                    setTimeout(() => addMessage('doctor', doctorResponse), 1000);
+                    const formattedConversation = data.formatted_text || 'Could not format the conversation.';
+                    displayConversation(formattedConversation);
                 })
                 .catch(error => {
                     loadingText.style.display = 'none';
-                    console.error('Error during transcription:', error);
+                    console.error('Error during transcription and formatting:', error);
                 });
         }
 
-        function addMessage(sender, text) {
+        function displayConversation(conversationText) {
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = ''; // Clear existing messages
+
+            const lines = conversationText.split('\n');
+            let previousSender = null;
+
+            lines.forEach(line => {
+                if (line.trim()) {
+                    const sender = line.startsWith('[Doctor]') ? 'doctor' : 'patient';
+                    const text = line.replace(/^\[.*?\]:\s*/, ''); // Remove speaker label
+
+                    if (sender === previousSender) {
+                        addMessage(sender, text, true);
+                    } else {
+                        addMessage(sender, text, false);
+                    }
+                    previousSender = sender;
+                }
+            });
+
+            toggleSummarizeButton();
+        }
+
+        function addMessage(sender, text, isContinuing) {
             const chatMessages = document.getElementById('chat-messages');
 
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
 
+            const logoDiv = document.createElement('img');
+            logoDiv.className = 'logo';
+            logoDiv.src = sender === 'doctor' ? 'doctor_logo.png' : 'patient_logo.png';
+
             const textDiv = document.createElement('div');
             textDiv.className = 'text';
-            textDiv.textContent = `${sender === 'doctor' ? 'Doctor: ' : 'Patient: '} ${text}`;
+            textDiv.textContent = text;
 
-            messageDiv.appendChild(textDiv);
+            if (sender === 'doctor') {
+                messageDiv.appendChild(textDiv);
+                messageDiv.appendChild(logoDiv);
+            } else {
+                messageDiv.appendChild(logoDiv);
+                messageDiv.appendChild(textDiv);
+            }
+
             chatMessages.appendChild(messageDiv);
-
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function toggleSummarizeButton() {
+            const summarizeButton = document.getElementById('summarize-button');
+            const chatMessages = document.getElementById('chat-messages');
+            if (chatMessages.children.length === 0) {
+                summarizeButton.disabled = true;
+            } else {
+                summarizeButton.disabled = false;
+            }
+        }
+
+        function summarizeConversation() {
+            const chatMessages = document.getElementById('chat-messages');
+            let conversationText = '';
+
+            for (let message of chatMessages.children) {
+                conversationText += message.querySelector('.text').textContent + '\n';
+            }
+
+            // Display the summarizing message where the transcribing message was
+            const summarizingText = document.getElementById('summarizing-text');
+            summarizingText.style.display = 'block';
+            const loadingText = document.getElementById('loading-text');
+            loadingText.style.display = 'none';  // Hide the transcribing message
+
+            fetch('http://127.0.0.1:8000/summarize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: conversationText })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    summarizingText.style.display = 'none';
+                    const summaryOutput = document.getElementById('summary-output');
+                    summaryOutput.textContent = data.text || "Error summarizing the conversation.";
+                    summaryOutput.style.display = 'block';
+                })
+                .catch(error => {
+                    summarizingText.style.display = 'none';
+                    console.error('Error summarizing conversation:', error);
+                });
         }
     </script>
 </body>
