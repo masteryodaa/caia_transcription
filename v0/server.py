@@ -10,14 +10,18 @@ load_dotenv()
 
 app = FastAPI() 
 
+# # List of allowed origins (frontend URLs)
+# origins = [
+#     "http://127.0.0.1:5500",  # Frontend origin
+#     "http://localhost:5500",   # Local development
+#     "http://localhost:8000",   # Server origin if needed
+# ]
+
 # List of allowed origins (frontend URLs)
 origins = [
-    "http://127.0.0.1:5500",  # Frontend origin
-    "http://localhost:5500",   # Local development
-    "http://localhost:8000",   # Server origin if needed
+    "https://caia-transcription.vercel.app",  # Your Vercel frontend URL
 ]
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # List of allowed origins
