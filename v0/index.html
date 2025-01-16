@@ -14,71 +14,69 @@
     <style>
         /* General styling */
         body {
-            /* font-family: 'Arial', sans-serif; */
             font-family: 'Outfit', sans-serif;
-
-            background: linear-gradient(to right, #c6d7f7, #b0c6e1, #a9bce4);
-            background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
+            background-color: #A9C9FF;
+            background-image: linear-gradient(180deg, #A9C9FF 0%, #FFBBEC 100%);
             margin: 0;
             padding: 0;
             color: #333;
+            display: flex;
+            justify-content: space-between;
+            height: 100vh;
             overflow-y: scroll;
-            /* Ensure the scrollbar is always visible */
+            box-sizing: border-box;
         }
 
-        /* Specific class with unique font weight */
-        .outfit-header {
-            font-family: 'Outfit', serif;
-            font-weight: 700; /* Example weight */
+        .company-header {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            z-index: 1000;
         }
 
-        html {
-            scrollbar-width: thin;
-            scrollbar-color: #888 #f0f2f5;
-            /* Set the scrollbar thumb color to grey and track to light grey */
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
         }
 
-        /* For WebKit-based browsers (Chrome, Safari) */
-        body::-webkit-scrollbar {
-            width: 6px;
-            /* Thin scrollbar */
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #004d7a;
+            font-family: 'Outfit', sans-serif;
         }
 
-        body::-webkit-scrollbar-track {
-            background: #f0f2f5;
-            /* Light grey track */
+
+        /* Product info text on the left */
+        .product-info {
+            width: 40%;
+            display: flex;
+            justify-content: center;
+            /* Centers horizontally */
+            align-items: center;
+            /* Centers vertically */
+            text-align: center;
+            /* Centers text within the div */
+            font-size: 2.5rem;
+            /* Increases text size slightly */
+            font-weight: bold;
+            padding: 20px;
+            margin-left: 20px;
+            height: 100vh;
+            /* Ensures it takes up the full height of the viewport */
+            box-sizing: border-box;
+            /* Ensures padding is included in the element's size */
         }
 
-        body::-webkit-scrollbar-thumb {
-            background: #888;
-            /* Grey color */
-            border-radius: 10px;
-            /* Rounded thumb */
-        }
-
-        body::-webkit-scrollbar-thumb:hover {
-            background: #555;
-            /* Darker grey on hover */
-        }
-
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
 
         .container {
-            width: 100%;
-            padding: 0 10px;
+            width: 60%;
+            padding: 10px;
             box-sizing: border-box;
         }
 
@@ -108,10 +106,7 @@
             display: flex;
             flex-direction: column;
             height: 80vh;
-            /* Adjusted for screen fit */
-            max-height: 80vh;
             padding: 15px;
-
             font-family: 'Outfit', serif;
             font-weight: 400;
         }
@@ -124,9 +119,6 @@
             font-size: 1.5rem;
             font-weight: bold;
             border-radius: 10px 10px 0 0;
-
-            font-family: 'Outfit', serif;
-            font-weight: 600; /* Example weight */
         }
 
         .chat-messages {
@@ -173,9 +165,6 @@
             font-size: 1rem;
             line-height: 1.4;
             font-family: 'Arial', sans-serif;
-
-            font-family: 'Outfit', serif;
-            font-weight: 500; /* Example weight */
         }
 
         .message.doctor .text {
@@ -199,9 +188,6 @@
             gap: 10px;
             border-top: 1px solid #ddd;
             border-radius: 0 0 10px 10px;
-
-            font-family: 'Outfit', serif;
-            font-weight: 500; /* Example weight */
         }
 
         .chat-footer button {
@@ -270,11 +256,116 @@
             color: #0084ff;
             font-weight: bold;
         }
-    </style>
 
+        body {
+            background: #3399ff;
+        }
+
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            animation: ripple 15s infinite;
+            box-shadow: 0px 0px 1px 0px #508fb9;
+        }
+
+        .small {
+            width: 200px;
+            height: 200px;
+            left: -100px;
+            bottom: -100px;
+        }
+
+        .medium {
+            width: 400px;
+            height: 400px;
+            left: -200px;
+            bottom: -200px;
+        }
+
+        .large {
+            width: 600px;
+            height: 600px;
+            left: -300px;
+            bottom: -300px;
+        }
+
+        .xlarge {
+            width: 800px;
+            height: 800px;
+            left: -400px;
+            bottom: -400px;
+        }
+
+        .xxlarge {
+            width: 1000px;
+            height: 1000px;
+            left: -500px;
+            bottom: -500px;
+        }
+
+        .shade1 {
+            opacity: 0.2;
+        }
+
+        .shade2 {
+            opacity: 0.5;
+        }
+
+        .shade3 {
+            opacity: 0.7;
+        }
+
+        .shade4 {
+            opacity: 0.8;
+        }
+
+        .shade5 {
+            opacity: 0.9;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.8);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(0.8);
+            }
+        }
+    </style>
 </head>
 
 <body>
+
+    <!-- Ripple effect background -->
+    <div class="ripple-background">
+        <div class="circle xxlarge shade1"></div>
+        <div class="circle xlarge shade2"></div>
+        <div class="circle large shade3"></div>
+        <div class="circle mediun shade4"></div>
+        <div class="circle small shade5"></div>
+    </div>
+
+    <div class="company-header">
+        <img src="doctor_logo.png" alt="Company Logo" class="company-logo">
+        <span class="company-name">Clinical AI Assistance</span>
+    </div>
+
+
+    <div class="product-info">
+        <strong>Improving Communication for Better Health.</strong><br>
+
+    </div>
+
+
+
+
     <div class="container">
         <div class="header">
             Doctor-Patient Chat
